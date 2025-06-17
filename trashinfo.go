@@ -41,7 +41,10 @@ func WriteTrashInfo(file *os.File, path string) error {
 		return err
 	}
 
-	deletionDate := time.Now().Format(time.RFC3339)
+	// The time zone should be the user’s (or filesystem’s) local time
+	dateLayout := "2006-01-02T15:04:05"
+	deletionDate := time.Now().Format(dateLayout)
+
 	trashInfo := fmt.Sprintf(trashInfoFmt, path, deletionDate)
 
 	_, err = file.Write([]byte(trashInfo))
