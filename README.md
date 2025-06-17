@@ -1,5 +1,5 @@
 # YARM (Yet Another RM)
 
 > [!WARNING]
-> WORK IN PROGRES
+> WORK IN PROGRESS
 
