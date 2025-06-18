@@ -5,14 +5,11 @@ import (
 	"encoding/hex"
 )
 
-func GenerateRandomID() string {
+func GenerateRandomSuffix() string {
 	randomID := make([]byte, 6)
 
-	_, err := rand.Read(randomID)
-	if err == nil {
-		return hex.EncodeToString(randomID)
-	}
+	// rand.Read never returns an error
+	rand.Read(randomID)
 
-	// TODO: fallback (paranoia)
-	return ""
+	return hex.EncodeToString(randomID)
 }

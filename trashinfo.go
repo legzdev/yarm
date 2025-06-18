@@ -27,7 +27,7 @@ func CreateTrashInfoFile(name string) (info *os.File, baseName string, err error
 		}
 
 		if errors.Is(err, fs.ErrExist) {
-			baseName = path.Base(name) + "." + GenerateRandomID()
+			baseName = path.Base(name) + "." + GenerateRandomSuffix()
 			continue
 		}
 

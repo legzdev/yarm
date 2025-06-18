@@ -6,7 +6,7 @@ import (
 	"github.com/legzdev/yarm"
 )
 
-func TestGenerateRandomID(t *testing.T) {
-	randomID := yarm.GenerateRandomID()
-	t.Log("randomID", randomID)
+func TestGenerateRandomSuffix(t *testing.T) {
+	suffix := yarm.GenerateRandomSuffix()
+	t.Log("suffix:", suffix)
 }
