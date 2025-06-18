@@ -5,12 +5,13 @@ import (
 	"os"
 )
 
-type ErrIsDir struct {
+type ErrCannotRemove struct {
 	Target string
+	Msg    string
 }
 
-func (e *ErrIsDir) Error() string {
-	return fmt.Sprintf("yarm: cannot remove '%s': Is a directory", e.Target)
+func (e *ErrCannotRemove) Error() string {
+	return fmt.Sprintf("yarm: cannot remove '%s': %s", e.Target, e.Msg)
 }
 
 func Fatal(v ...any) (int, error) {
