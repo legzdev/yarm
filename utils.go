@@ -18,6 +18,8 @@ func confirm(msg string) (bool, error) {
 		return false, err
 	}
 
+	prompt = strings.TrimSuffix(prompt, "\n")
+
 	return prompt == "y", nil
 }
 
