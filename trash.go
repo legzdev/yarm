@@ -1,8 +1,6 @@
 package yarm
 
 import (
-	"fmt"
-	"io"
 	"os"
 	"path"
 )
@@ -13,6 +11,22 @@ func MoveToTrash(target string) error {
 		return err
 	}
 
+	inTrashDir := InTrashDir(target)
+	if inTrashDir {
+		ok, err := confirmf("Permanently remove '%s'?", target)
+		if err != nil {
+			return err
+		}
+
+		if !ok {
+			verbosef("skipping '%s'", target)
+			return nil
+		}
+
+		// TODO: print removed files
+		return os.RemoveAll(target)
+	}
+
 	trashinfoFile, baseName, err := CreateTrashInfoFile(target)
 	if err != nil {
 		return err
@@ -21,18 +35,20 @@ func MoveToTrash(target string) error {
 
 	trashPath := path.Join(TrashDir, "files", baseName)
 
-	if !FlagDryRun {
-		moveToTrash(target, trashPath, trashinfoFile)
+	err = moveToTrash(target, trashPath, trashinfoFile)
+	if err != nil {
+		return err
 	}
 
-	if FlagVerbose || FlagDryRun {
-		fmt.Printf("trashed '%s' => '%s'\n", target, trashPath)
-	}
-
+	verbosef("trashed '%s' => '%s'\n", target, trashPath)
 	return nil
 }
 
 func moveToTrash(target, trashPath string, trashInfo *os.File) error {
+	if FlagDryRun {
+		return nil
+	}
+
 	err := os.Rename(target, trashPath)
 	if err != nil {
 		return err
@@ -70,19 +86,4 @@ func CheckTarget(target string) error {
 	}
 
 	return &ErrCannotRemove{Msg: "Directory not empty", Target: target}
-}
-
-func IsDirEmpty(path string) (bool, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return false, err
-	}
-	defer f.Close()
-
-	_, err = f.Readdirnames(1)
-	if err == io.EOF {
-		return true, nil
-	}
-
-	return false, err
 }

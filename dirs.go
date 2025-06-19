@@ -1,8 +1,11 @@
 package yarm
 
 import (
+	"io"
 	"os"
 	"path"
+	"path/filepath"
+	"strings"
 )
 
 var TrashDir string
@@ -32,4 +35,27 @@ func CheckTrashDir() error {
 	}
 
 	return nil
+}
+
+func IsDirEmpty(path string) (bool, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	_, err = f.Readdirnames(1)
+	if err == io.EOF {
+		return true, nil
+	}
+
+	return false, err
+}
+
+func InTrashDir(target string) bool {
+	if !path.IsAbs(target) {
+		target, _ = filepath.Abs(target)
+	}
+
+	return strings.HasPrefix(target, TrashDir)
 }
