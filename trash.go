@@ -63,7 +63,7 @@ func moveToTrash(target, trashPath string, trashInfo *os.File) error {
 }
 
 func CheckTarget(target string) error {
-	targetInfo, err := os.Stat(target)
+	targetInfo, err := os.Lstat(target)
 	if err != nil {
 		return err
 	}
